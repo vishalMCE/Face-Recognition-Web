@@ -66,15 +66,12 @@ def front():
         print(filename)
         
         # calling ml model
-        id = md.fun(filename)
-        sno = int(id.split('.')[0])
-
-        # reterive data from sql
-        data = MLData.query.filter_by(sno=sno).first()
-        # print(data.firstname)
-        # print(data.lastname)
-        # print(data.state)
-        # print(data.city)
+        check, id = md.fun(filename)
+        if check == True:
+            sno = int(id.split('.')[0])
+            # reterive data from sql
+            data = MLData.query.filter_by(sno=sno).first()
+            # print(data.firstname)
 
         # deleting the image 
         path = os.path.join(app.config['TEMP_UPLOAD'], filename)

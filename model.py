@@ -27,7 +27,7 @@ def fun(filename):
         result = face_recognition.compare_faces([img_endcoding], img_endcoding2)
         if result[0] == True:
             print('Result:', result)   
-            return x
+            return True, x
         print('Result:', result, type(result), type(result[0]))
-    # return False
+    return False, 'No'
         
