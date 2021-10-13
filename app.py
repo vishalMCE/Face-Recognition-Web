@@ -10,7 +10,7 @@ app = Flask(__name__)
 # image uploading 
 app.secret_key = "vishal-image"
 app.config['UPLOAD_PATH'] = 'static/data/'       # UPLOAD_PATH = 'static/uploads/'
-app.config['UPLOAD'] = 'static/uploads/'
+app.config['TEMP_UPLOAD'] = 'static/uploads/'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -38,7 +38,7 @@ class MLData(db.Model):
 
 # Start application
 @app.route("/", methods=['GET', 'POST'])
-def hello_world():
+def front():
     print('main-vishal') 
     data = ""
     if request.method=='POST':
@@ -55,8 +55,13 @@ def hello_world():
         img.filename = date_time+".jpg"
 
         filename = secure_filename(img.filename)
-        img.save(os.path.join(app.config['UPLOAD'], filename))
-        # print(os.path.join(app.config['UPLOAD'], filename))
+
+        path = os.getcwd() + r'\static\uploads'
+        if os.path.isdir(path) is False:
+            os.mkdir(path)
+        
+        img.save(os.path.join(app.config['TEMP_UPLOAD'], filename))
+        # print(os.path.join(app.config['TEMP_UPLOAD'], filename))
         
         print(filename)
         
@@ -72,7 +77,7 @@ def hello_world():
         # print(data.city)
 
         # deleting the image 
-        path = os.path.join(app.config['UPLOAD'], filename)
+        path = os.path.join(app.config['TEMP_UPLOAD'], filename)
         if os.path.isfile(path) == True:
             os.remove(path)
 
@@ -128,6 +133,9 @@ def admin():
         # Image
         img = request.files['Img']
         if img:
+            path = os.getcwd() + r'\static\data'
+            if os.path.isdir(path) is False:
+                os.mkdir(path)
             # print(img.filename)
             # file_extension = (img.filename).rsplit('.',1)[1].lower()
             img.filename = str(mldata.sno)+".jpg"
@@ -179,6 +187,9 @@ def update(sno):
         img = request.files['Img']
         print(img)
         if img:
+            path = os.getcwd() + r'\static\data'
+            if os.path.isdir(path) is False:
+                os.mkdir(path)
             # print(img.filename)
             # file_extension = (img.filename).rsplit('.',1)[1].lower()
             img.filename = str(mldata.sno)+".jpg"

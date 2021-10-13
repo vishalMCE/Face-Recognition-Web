@@ -29,4 +29,5 @@ def fun(filename):
             print('Result:', result)   
             return x
         print('Result:', result, type(result), type(result[0]))
+    # return False
         
