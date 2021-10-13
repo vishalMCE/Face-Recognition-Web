@@ -1,17 +1,32 @@
 {% extends 'base.html' %}
 {% block title %} Home{% endblock title %}
 {% block body %}
+<script>
+    function showPreview_disable_button(event) {
+        if (event.target.files.length > 0) {
+            var src = URL.createObjectURL(event.target.files[0]);
+            var preview = document.getElementById("file_preview");
+            preview.src = src;
+            preview.style.display = "block";
+            document.getElementById("submit").disabled = false;
+        }
+    }
+    function checkForm(form) {
+        form.submit.disabled = true;
+        return true;
+    }
+</script>
 <div class="container ">
     <label for="formFile" class="form-label"></label>
 
-    <form method="POST" action="/" enctype="multipart/form-data" >
+    <form method="POST" action="/" enctype="multipart/form-data" onsubmit="return checkForm(this);">
         <div class="row shadow p-3 mb-5 bg-body rounded">
             <div class="col-10">
                 <input type="file" name="Img" class="form-control" id="Img" accept="image/*"
-                    onchange="showPreview(event);" >
+                    onchange="showPreview_disable_button(event);" >
             </div>
             <div class="col-md-2">
-                <button type="submit" name="submit" id="submit" class="btn btn-primary col-12">Submit</button>
+                <button type="submit" name="submit" id="submit" class="btn btn-primary col-12" disabled>Submit</button>
             </div>
         </div>
     </form>
