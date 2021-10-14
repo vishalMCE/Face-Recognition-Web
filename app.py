@@ -35,6 +35,15 @@ class MLData(db.Model):
     # def __repr__(self) -> str:
     #     return f"{self.sno} - {self.firstname}"
 
+def dateTime():
+    # playing with datetime
+    date_time = str(datetime.utcnow())
+    date_time = date_time.replace(':','')
+    date_time = date_time.replace('-','')
+    date_time = date_time.replace('.','')
+    date_time = date_time.replace(' ','')
+    date_time = date_time.strip()
+    return date_time
 
 # Start application
 @app.route("/", methods=['GET', 'POST'])
@@ -45,12 +54,7 @@ def front():
         img = request.files['Img']
 
         # playing with datetime
-        date_time = str(datetime.utcnow())
-        date_time = date_time.replace(':','')
-        date_time = date_time.replace('-','')
-        date_time = date_time.replace('.','')
-        date_time = date_time.replace(' ','')
-        date_time = date_time.strip()
+        date_time = dateTime()
         # changing file name 
         img.filename = date_time+".jpg"
 
@@ -96,6 +100,8 @@ login_check=0   #use for load login page inbuild in admin.html
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     print('admin-vishal') 
+    del_time = dateTime()       #for securing deletion
+    update_time = dateTime()    #for securing to go derect in update
     global login_check
     if request.method=='POST':
         print('la')
@@ -146,13 +152,14 @@ def admin():
     if login_check == 1:
         alldata = MLData.query.all() 
         login_check = 0
-        return render_template('admin.html', alldata=alldata, login_check=1)
+        return render_template('admin.html', alldata=alldata, login_check=1, del_time=del_time, update_time=update_time)
     return render_template('admin.html', login_check=0)
     
 
 
-@app.route('/delete/<int:sno>')
-def delete(sno):
+@app.route('/admin/delete/<string:del_time>/<int:sno>')
+def delete(del_time, sno):
+    print('del time', del_time)
     mldata = MLData.query.filter_by(sno=sno).first()
     filename = str(mldata.sno)+".jpg"
     path = os.path.join(app.config['UPLOAD_PATH'], filename)
@@ -164,8 +171,8 @@ def delete(sno):
     login_check = 1 
     return redirect('/admin')
 
-@app.route('/update/<int:sno>', methods=['GET', 'POST'])
-def update(sno):
+@app.route('/admin/update/<string:update_time>/<int:sno>', methods=['GET', 'POST'])
+def update(update_time, sno):
     if request.method=='POST':
         firstname = request.form['FirstName']
         lastname = request.form['LastName']
@@ -208,9 +215,10 @@ def update(sno):
             # print(mldata.sno)  # serial key of data
         global login_check
         login_check=1
+        print('update')
         return redirect('/admin')
     data = MLData.query.filter_by(sno=sno).first()
-    return render_template('update.html', data=data)
+    return render_template('update.html', data=data, update_time=update_time)
 
 
 @app.route("/about")
@@ -219,4 +227,4 @@ def about():
     return render_template('about.html')
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)

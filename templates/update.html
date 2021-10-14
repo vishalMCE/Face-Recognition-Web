@@ -14,7 +14,7 @@
             </div>
         </div>
         <div class="col-8">
-            <form action="/update/{{data.sno}}" enctype="multipart/form-data" method="POST" class="row g-3">
+            <form action="/admin/update/{{update_time}}/{{data.sno}}" enctype="multipart/form-data" method="POST" class="row g-3">
                 <div class="col-12">
                     <input type="file" name="Img" class="form-control" id="Img" accept="image/*" onchange="showPreview(event);">
                 </div>
