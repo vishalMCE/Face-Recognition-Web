@@ -1,8 +1,65 @@
 {% extends 'base.html' %}
 {% block title %} About{% endblock title %}
 {% block body %}
-<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-    <h1 class="display-4">AboutUs</h1>
-    <p class="lead">Team Project</p>
+<div class="container my-4">
+    
+    <div class="row shadow-lg p-3 mb-5 bg-body rounded">
+        <h3 class="display-6 text-center" style="margin-top: 1ch;">Introduction to the project</h3>
+        <div class="my-4 col-4">
+            <div class="preview card" style="width: auto;">
+                <img id="file_preview" class="card-img-top" src="/static/about/introduction.jpg" onerror="this.src='/static/ram.png'">
+            </div>
+        </div>
+        <div class="my-4 col-8">
+            <p class="lead text-capitalize">
+                UniI is web-app based facial recognition tool.
+                It has been built to be used for checking the details and its authenticity of any person in an organisation.
+                It
+                can be used by invigilators in examination halls to check if the person appearing in the exam is the same
+                that
+                they claim. Details of the students can be changed by administration of the organisation.
+            </p>
+        </div>
+    </div>
+    <div class="row shadow-lg p-3 mb-5 bg-body rounded">
+        <h3 class="display-6 text-center">Motivation</h3>
+        
+        <div class="my-4 container col-8">
+            <p class="lead text-start">
+                Checking the authenticity of a person in an organisation is of utmost importance. While the current process
+                of
+                checking through identity cards is working fine the process itself is not feasible if the organisation body
+                is
+                very large. The solution to this problem is "UniI: A Facial Recognition Tool" which not only helps with
+                checking
+                authenticity of the person. This only requires the database of all the people in the organisation which they
+                already have.
+            </p>
+        </div>
+        <div class="my-4 col-4 align-items-center align-items-center">
+            <div class="preview card" style="width: auto;">
+                <img id="file_preview" class="card-img-top" src="/static/about/motivation.png" onerror="this.src='/static/ram.png'">
+            </div>
+        </div>
+    </div>
+    <div class="row shadow-lg p-3 mb-5 bg-body rounded">
+        <h3 class="display-6 text-center">Process</h3>
+        <div class="my-4 col-4 align-items-center">
+            <div class="preview card" style="width: auto;">
+                <img id="file_preview" class="card-img-top" src="/static/about/process.jpg" onerror="this.src='/static/ram.png'">
+            </div>
+        </div>
+        <div class="my-4 container col-8">
+            <p class="lead text-capitalize">
+                Facial recognition is the process of identifying or verifying the identity of a person using their face. It
+                captures, analyzes, and compares patterns based on the person's facial details. We have used Python and its
+                framework Flask for the backend. To setup the facial recognition features of the app we have used libraries
+                such
+                as OpenCV, Facial-Recognition.
+            </p>
+        </div>
+
+    </div>
 </div>
+
 {% endblock body %}
