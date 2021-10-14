@@ -90,59 +90,65 @@ def front():
 
         return render_template('index.html', data=data)
     return render_template('index.html', data=data)
-    
 
 
-
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    print('login-vishal')
-    if request.method=='POST':
-        user = request.form['user']
-        pwd = request.form['pwd']
-        print(user)
-        if user not in credentials:
-            return render_template('login.html', info="Invalid User")
-        else:
-            if credentials[user]!=pwd:
-                return render_template('login.html', info="Invalid Password")
-            else:
-                return redirect('/admin')
-    return render_template('login.html')
-
-
+login_check=0   #use for load login page inbuild in admin.html
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
-    print('admin-vishal')
+    print('admin-vishal') 
+    global login_check
     if request.method=='POST':
-        firstname = request.form['FirstName']
-        lastname = request.form['LastName']
-        email = request.form['Email']
-        pno = request.form['PNo']
-        address = request.form['Address']
-        city = request.form['City']
-        state = request.form['State']
-        zip = request.form['Zip']
-        mldata = MLData(firstname=firstname, lastname=lastname, email=email, pno=pno, address=address, city=city, state=state, zip=zip)
-        db.session.add(mldata)
-        db.session.commit()
-        # Image
-        img = request.files['Img']
-        if img:
-            path = os.getcwd() + r'\static\data'
-            if os.path.isdir(path) is False:
-                os.mkdir(path)
-            # print(img.filename)
-            # file_extension = (img.filename).rsplit('.',1)[1].lower()
-            img.filename = str(mldata.sno)+".jpg"
-            # print(img, img.filename, type(file_extension))
-            filename = secure_filename(img.filename)
-            img.save(os.path.join(app.config['UPLOAD_PATH'], filename))
-            # os.rename(img,mldata.sno)
-            # print(mldata.sno)  # serial key of data
-    alldata = MLData.query.all()
-    return render_template('admin.html', alldata=alldata)
+        print('la')
+        global login_check
+        if request.form.get('submit'):
+            print('login-vishal')
+            user = request.form['user']
+            pwd = request.form['pwd']
+            print(user)
+            if user not in credentials:
+                return render_template('admin.html', info="Invalid User", login_check=0)
+            else:
+                if credentials[user]!=pwd:
+                    return render_template('admin.html', info="Invalid Password", login_check=0)
+                else:
+                    print('login')
+                    login_check=1
+                    # return render_template('admin.html', login_check=1)
+        else:
+            # login_check=1
+            firstname = request.form['FirstName']
+            lastname = request.form['LastName']
+            email = request.form['Email']
+            pno = request.form['PNo']
+            address = request.form['Address']
+            city = request.form['City']
+            state = request.form['State']
+            zip = request.form['Zip']
+            mldata = MLData(firstname=firstname, lastname=lastname, email=email, pno=pno, address=address, city=city, state=state, zip=zip)
+            db.session.add(mldata)
+            db.session.commit()
+            # Image
+            img = request.files['Img']
+            if img:
+                path = os.getcwd() + r'\static\data'
+                if os.path.isdir(path) is False:
+                    os.mkdir(path)
+                # print(img.filename)
+                # file_extension = (img.filename).rsplit('.',1)[1].lower()
+                img.filename = str(mldata.sno)+".jpg"
+                # print(img, img.filename, type(file_extension))
+                filename = secure_filename(img.filename)
+                img.save(os.path.join(app.config['UPLOAD_PATH'], filename))
+                # os.rename(img,mldata.sno)
+                # print(mldata.sno)  # serial key of data
+            login_check=1
+            print('login_check', login_check)
+    if login_check == 1:
+        alldata = MLData.query.all() 
+        login_check = 0
+        return render_template('admin.html', alldata=alldata, login_check=1)
+    return render_template('admin.html', login_check=0)
+    
 
 
 @app.route('/delete/<int:sno>')
@@ -154,6 +160,8 @@ def delete(sno):
         os.remove(path)
     db.session.delete(mldata)
     db.session.commit()
+    global login_check
+    login_check = 1 
     return redirect('/admin')
 
 @app.route('/update/<int:sno>', methods=['GET', 'POST'])
@@ -198,6 +206,8 @@ def update(sno):
             img.save(path)
             # os.rename(img,mldata.sno)
             # print(mldata.sno)  # serial key of data
+        global login_check
+        login_check=1
         return redirect('/admin')
     data = MLData.query.filter_by(sno=sno).first()
     return render_template('update.html', data=data)
@@ -209,4 +219,4 @@ def about():
     return render_template('about.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
