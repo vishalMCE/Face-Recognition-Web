@@ -23,10 +23,12 @@ db = SQLAlchemy(app)
 
 class MLData(db.Model):
     sno = db.Column(db.Integer, primary_key=True)
-    firstname = db.Column(db.String(30), nullable=False)
-    lastname = db.Column(db.String(30), nullable=False)
+    fullname = db.Column(db.String(30), nullable=False)
+    rollno = db.Column(db.String(30), nullable=False)
+    dateofbirth = db.Column(db.String(12))
     email = db.Column(db.String(30), nullable=False)
     pno = db.Column(db.Integer, nullable=False)
+    school = db.Column(db.String(100), nullable=False)
     address = db.Column(db.String(100), nullable=False)
     city = db.Column(db.String(30), nullable=False)
     state = db.Column(db.String(30), nullable=False)
@@ -122,15 +124,17 @@ def admin():
                     # return render_template('admin.html', login_check=1)
         else:
             # login_check=1
-            firstname = request.form['FirstName']
-            lastname = request.form['LastName']
+            fullname = request.form['FullName']
+            rollno = request.form['RollNo']
+            dateofbirth = request.form['DateofBirth']
             email = request.form['Email']
             pno = request.form['PNo']
+            school = request.form['school']
             address = request.form['Address']
             city = request.form['City']
             state = request.form['State']
             zip = request.form['Zip']
-            mldata = MLData(firstname=firstname, lastname=lastname, email=email, pno=pno, address=address, city=city, state=state, zip=zip)
+            mldata = MLData(fullname=fullname, rollno=rollno, dateofbirth=dateofbirth, email=email, pno=pno, school=school, address=address, city=city, state=state, zip=zip)
             db.session.add(mldata)
             db.session.commit()
             # Image
@@ -174,20 +178,24 @@ def delete(del_time, sno):
 @app.route('/admin/update/<string:update_time>/<int:sno>', methods=['GET', 'POST'])
 def update(update_time, sno):
     if request.method=='POST':
-        firstname = request.form['FirstName']
-        lastname = request.form['LastName']
+        fullname = request.form['FullName']
+        rollno = request.form['RollNo']
+        dateofbirth = request.form['DateofBirth']
         email = request.form['Email']
         pno = request.form['PNo']
+        school = request.form['school']
         address = request.form['Address']
         city = request.form['City']
         state = request.form['State']
         zip = request.form['Zip']
         mldata = MLData.query.filter_by(sno=sno).first()
         # updating the data
-        mldata.firstname = firstname
-        mldata.lastname = lastname
+        mldata.fullname = fullname
+        mldata.rollno = rollno
+        mldata.dateofbirth = dateofbirth
         mldata.email = email
         mldata.pno = pno
+        mldata.school = school
         mldata.address = address
         mldata.city = city
         mldata.state = state
