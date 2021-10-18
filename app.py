@@ -8,13 +8,13 @@ import model as md
 app = Flask(__name__)
 
 # image uploading 
-app.secret_key = "vishal-image"
+app.secret_key = "UniFI-image"
 app.config['UPLOAD_PATH'] = 'static/data/'       # UPLOAD_PATH = 'static/uploads/'
 app.config['TEMP_UPLOAD'] = 'static/uploads/'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-credentials = {'admin': 'vishal'}    # admin panel credentials 
+credentials = {'admin': 'UniFI'}    # admin panel credentials 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mldata.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -50,7 +50,7 @@ def dateTime():
 # Start application
 @app.route("/", methods=['GET', 'POST'])
 def front():
-    print('main-vishal') 
+    print('main-UniFI') 
     data = ""
     if request.method=='POST':
         img = request.files['Img']
@@ -101,15 +101,14 @@ def front():
 login_check=0   #use for load login page inbuild in admin.html
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
-    print('admin-vishal') 
+    print('admin-UniFI') 
     del_time = dateTime()       #for securing deletion
     update_time = dateTime()    #for securing to go derect in update
     global login_check
     if request.method=='POST':
-        print('la')
         global login_check
         if request.form.get('submit'):
-            print('login-vishal')
+            print('login-UniFI')
             user = request.form['user']
             pwd = request.form['pwd']
             print(user)
